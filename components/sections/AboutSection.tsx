@@ -1,17 +1,27 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, Variants } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.23, 1, 0.32, 1] } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.9,
+      ease: [0.23, 1, 0.32, 1] as const,
+    },
+  },
 }
 
-const fadeIn = {
+const fadeIn: Variants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 1.2 } },
+  visible: {
+    opacity: 1,
+    transition: { duration: 1.2 },
+  },
 }
 
 const stats = [

@@ -1,44 +1,46 @@
-'use client'
+"use client";
 
-import { useEffect } from 'react'
-import Cursor from '@/components/ui/Cursor'
-import Navbar from '@/components/ui/Navbar'
-import HeroSection from '@/components/sections/HeroSection'
-import MarqueeSection from '@/components/sections/MarqueeSection'
-import AboutSection from '@/components/sections/AboutSection'
-import SkillsSection from '@/components/sections/SkillsSection'
-import ThreeDSection from '@/components/sections/ThreeDSection'
-import ProjectsSection from '@/components/sections/ProjectsSection'
-import ExperienceSection from '@/components/sections/ExperienceSection'
-import ContactSection from '@/components/sections/ContactSection'
+import { useState } from "react";
+import dynamic from "next/dynamic";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import Marquee from "@/components/Marquee";
+import About from "@/components/About";
+import Skills from "@/components/Skills";
+import Projects from "@/components/Projects";
+import Experience from "@/components/Experience";
+import Contact from "@/components/Contact";
+import Cursor from "@/components/Cursor";
+
+// SSR-disabled for all Three.js / heavy components
+const LoadingScreen = dynamic(() => import("@/components/LoadingScreen"), { ssr: false });
+const HelixSection  = dynamic(() => import("@/components/HelixSection"),  { ssr: false });
+const ScrollObject3D = dynamic(() => import("@/components/ScrollObject3D"), { ssr: false });
 
 export default function Home() {
-  useEffect(() => {
-    // Nav solid on scroll
-    const handleScroll = () => {
-      const nav = document.getElementById('nav')
-      if (nav) {
-        nav.classList.toggle('nav-solid', window.scrollY > 60)
-      }
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  const [loaded, setLoaded] = useState(false);
 
   return (
     <>
-      <Cursor />
-      <Navbar />
-      <main>
-        <HeroSection />
-        <MarqueeSection />
-        <AboutSection />
-        <SkillsSection />
-        <ThreeDSection />
-        <ProjectsSection />
-        <ExperienceSection />
-        <ContactSection />
-      </main>
+      {/* Loading screen — unmounts after cinematic exit */}
+      {!loaded && <LoadingScreen onComplete={() => setLoaded(true)} />}
+
+      {/* Main site — rendered underneath loader, becomes visible after curtains open */}
+      <div style={{ visibility: loaded ? "visible" : "hidden" }}>
+        <Cursor />
+        <ScrollObject3D />
+        <Navbar />
+        <main>
+          <Hero />
+          <Marquee />
+          <About />
+          <Skills />
+          <Projects />
+          <HelixSection />
+          <Experience />
+          <Contact />
+        </main>
+      </div>
     </>
-  )
+  );
 }

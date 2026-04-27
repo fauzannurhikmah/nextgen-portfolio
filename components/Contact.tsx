@@ -6,10 +6,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const socials = [
-  { label: "GitHub",   href: "#" },
+  { label: "GitHub", href: "#" },
   { label: "LinkedIn", href: "#" },
-  { label: "Twitter",  href: "#" },
-  { label: "Read.cv",  href: "#" },
+  { label: "Twitter", href: "#" },
+  { label: "Read.cv", href: "#" },
 ];
 
 export default function Contact() {
@@ -61,10 +61,10 @@ export default function Contact() {
         </p>
 
         <a
-          href="mailto:alex@example.com"
+          href="mailto:fauzannurhikmah0@gmail.com"
           className="contact-gsap-up inline-block font-display text-[clamp(28px,4.5vw,56px)] tracking-[.04em] text-cream no-underline border-b border-accent/30 pb-2 hover:text-accent hover:border-accent transition-all duration-300"
         >
-          alex@example.com
+          fauzannurhikmah0@gmail.com
         </a>
 
         <div className="socials-wrap flex justify-center gap-4 mt-14 flex-wrap">
@@ -81,7 +81,8 @@ export default function Contact() {
 
         <div className="mt-24 pt-8 border-t border-cream/[0.08] flex justify-between items-center flex-wrap gap-4">
           <span className="font-mono text-[10px] tracking-[.12em] uppercase text-cream/20">
-            © 2024 Alex Chen
+            © {new Date().getFullYear()} Fauzan Nurhikmah
+
           </span>
           <span className="font-mono text-[10px] tracking-[.12em] uppercase text-cream/20">
             Built with craft, not templates

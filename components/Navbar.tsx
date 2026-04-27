@@ -20,14 +20,13 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-[200] px-[5vw] py-7 flex items-center justify-between transition-all duration-500 ${
-        scrolled
+      className={`fixed top-0 left-0 right-0 z-[200] px-[5vw] py-7 flex items-center justify-between transition-all duration-500 ${scrolled
           ? "bg-ink/85 backdrop-blur-md border-b border-cream/[0.07]"
           : "bg-transparent"
-      }`}
+        }`}
     >
       <Link href="/" className="font-display text-[22px] tracking-[.06em] text-cream no-underline">
-        ALEX<span className="text-accent">.</span>
+        FAUZAN<span className="text-accent">.</span>
       </Link>
 
       <div className="flex items-center gap-9">

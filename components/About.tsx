@@ -26,14 +26,18 @@ export default function About() {
       gsap.utils.toArray<HTMLElement>(".about-gsap-up").forEach((el) => {
         gsap.fromTo(el,
           { y: 50, opacity: 0 },
-          { y: 0, opacity: 1, duration: 1, ease: "expo.out",
-            scrollTrigger: { trigger: el, start: "top 88%", once: true } }
+          {
+            y: 0, opacity: 1, duration: 1, ease: "expo.out",
+            scrollTrigger: { trigger: el, start: "top 88%", once: true }
+          }
         );
       });
       gsap.fromTo(".about-gsap-fade",
         { opacity: 0 },
-        { opacity: 1, duration: 1.2, ease: "power2.out",
-          scrollTrigger: { trigger: ".about-gsap-fade", start: "top 85%", once: true } }
+        {
+          opacity: 1, duration: 1.2, ease: "power2.out",
+          scrollTrigger: { trigger: ".about-gsap-fade", start: "top 85%", once: true }
+        }
       );
     }, sectionRef);
     return () => ctx.revert();
@@ -59,7 +63,7 @@ export default function About() {
       {/* Right */}
       <div className="pt-5">
         <p className="about-gsap-up text-[16px] font-normal leading-[1.82] text-cream/60 mb-6">
-          <strong className="text-cream font-medium">Alex Chen</strong> — Senior Engineer at Scale AI. Previously Stripe, Figma. I specialise in the full spectrum: from WebGL shaders and React component libraries to distributed backend systems processing millions of events.
+          <strong className="text-cream font-medium">Fauzan Nurhikmah</strong> — Senior Engineer at Scale AI. Previously Stripe, Figma. I specialise in the full spectrum: from WebGL shaders and React component libraries to distributed backend systems processing millions of events.
         </p>
         <p className="about-gsap-up text-[16px] font-normal leading-[1.82] text-cream/60 mb-6">
           I don't just write code — I architect decisions that compound over time. Every PR is a product decision. Every abstraction has a cost.

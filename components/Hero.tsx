@@ -4,14 +4,14 @@ import Link from "next/link";
 import { gsap } from "gsap";
 
 export default function Hero() {
-  const canvasRef  = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     let animId: number;
     (async () => {
-      const THREE = (await import("three")).default ?? await import("three");
-      const canvas  = canvasRef.current;
+      const THREE = (await import("three"))
+      const canvas = canvasRef.current;
       const section = sectionRef.current;
       if (!canvas || !section) return;
 
@@ -22,12 +22,12 @@ export default function Hero() {
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
       renderer.setSize(W(), H());
 
-      const scene  = new THREE.Scene();
+      const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(55, W() / H(), 0.1, 100);
       camera.position.z = 28;
 
       const COLS = 34, ROWS = 22;
-      const geo  = new THREE.BufferGeometry();
+      const geo = new THREE.BufferGeometry();
       const pos: number[] = [], uv: number[] = [], idx: number[] = [];
 
       for (let r = 0; r <= ROWS; r++) {
@@ -43,7 +43,7 @@ export default function Hero() {
         }
       }
       geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
-      geo.setAttribute("uv",       new THREE.Float32BufferAttribute(uv,  2));
+      geo.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
       geo.setIndex(idx);
 
       type Ripple = { ox: number; oy: number; startT: number };
@@ -51,10 +51,10 @@ export default function Hero() {
 
       const mat = new THREE.ShaderMaterial({
         transparent: true,
-        wireframe:   true,
+        wireframe: true,
         uniforms: {
-          uTime:    { value: 0 },
-          uMouse:   { value: new THREE.Vector2(0.5, 0.5) },
+          uTime: { value: 0 },
+          uMouse: { value: new THREE.Vector2(0.5, 0.5) },
           uRipple0: { value: new THREE.Vector4(0, 0, -99, 0) },
           uRipple1: { value: new THREE.Vector4(0, 0, -99, 0) },
           uRipple2: { value: new THREE.Vector4(0, 0, -99, 0) },
@@ -115,7 +115,7 @@ export default function Hero() {
       const onClick = (e: MouseEvent) => {
         const rect = section.getBoundingClientRect();
         if (e.clientY < rect.top || e.clientY > rect.bottom) return;
-        const nx =  (e.clientX / W()) * 2 - 1;
+        const nx = (e.clientX / W()) * 2 - 1;
         const ny = -(e.clientY / H()) * 2 + 1;
         ripples.unshift({ ox: nx, oy: ny, startT: mat.uniforms.uTime.value });
         if (ripples.length > 3) ripples.pop();
@@ -145,9 +145,9 @@ export default function Hero() {
       render();
 
       return () => {
-        window.removeEventListener("click",     onClick);
+        window.removeEventListener("click", onClick);
         window.removeEventListener("mousemove", onMove);
-        window.removeEventListener("resize",    onResize);
+        window.removeEventListener("resize", onResize);
         cancelAnimationFrame(animId);
         renderer.dispose();
       };
@@ -159,8 +159,8 @@ export default function Hero() {
     const ctx = gsap.context(() => {
       gsap.timeline({ delay: 0.2 })
         .to(".hero-eyebrow-inner", { y: 0, duration: 1, ease: "expo.out" })
-        .to(".headline-row span",  { y: 0, duration: 1.15, stagger: 0.13, ease: "expo.out" }, "<0.1")
-        .to(".hero-desc-p",        { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" }, "<0.35")
+        .to(".headline-row span", { y: 0, duration: 1.15, stagger: 0.13, ease: "expo.out" }, "<0.1")
+        .to(".hero-desc-p", { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" }, "<0.35")
         .to(".hero-actions-inner", { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" }, "<0.1");
     });
     return () => ctx.revert();

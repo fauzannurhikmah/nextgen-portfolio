@@ -2,11 +2,12 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import type * as THREE from "three";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function HelixSection() {
-  const wrapRef   = useRef<HTMLDivElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const phase0Ref = useRef<HTMLDivElement>(null);
   const phase1Ref = useRef<HTMLDivElement>(null);
@@ -18,9 +19,9 @@ export default function HelixSection() {
     let cleanupThree: (() => void) | null = null;
 
     (async () => {
-      const THREE = (await import("three")).default ?? await import("three");
+      const THREE = await import("three");
       const canvas = canvasRef.current;
-      const wrap   = wrapRef.current;
+      const wrap = wrapRef.current;
       if (!canvas || !wrap) return;
 
       const W = () => canvas.parentElement!.offsetWidth;
@@ -30,13 +31,13 @@ export default function HelixSection() {
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
       renderer.setSize(W(), H());
 
-      const scene  = new THREE.Scene();
+      const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(50, W() / H(), 0.1, 200);
       camera.position.set(8, 0, 28);
 
       // ── build helix ──────────────────────────────────────────────────────
       const POINTS = 140, TURNS = 5, HEIGHT = 14, R = 2.5;
-      const group  = new THREE.Group();
+      const group = new THREE.Group();
       scene.add(group);
 
       const mat1 = new THREE.MeshStandardMaterial({
@@ -58,10 +59,10 @@ export default function HelixSection() {
       const s2pts: THREE.Vector3[] = [];
 
       for (let i = 0; i < POINTS; i++) {
-        const t  = i / (POINTS - 1);
-        const a  = t * Math.PI * 2 * TURNS;
-        const y  = (t - 0.5) * HEIGHT;
-        const x1 = Math.cos(a) * R,        z1 = Math.sin(a) * R;
+        const t = i / (POINTS - 1);
+        const a = t * Math.PI * 2 * TURNS;
+        const y = (t - 0.5) * HEIGHT;
+        const x1 = Math.cos(a) * R, z1 = Math.sin(a) * R;
         const x2 = Math.cos(a + Math.PI) * R, z2 = Math.sin(a + Math.PI) * R;
 
         s1pts.push(new THREE.Vector3(x1, y, z1));
@@ -92,8 +93,8 @@ export default function HelixSection() {
 
         if (i % 7 === 0) {
           const len = new THREE.Vector3(x1 - x2, 0, z1 - z2).length();
-          const bg  = new THREE.CylinderGeometry(0.04, 0.04, len, 8);
-          const bm  = new THREE.Mesh(bg,
+          const bg = new THREE.CylinderGeometry(0.04, 0.04, len, 8);
+          const bm = new THREE.Mesh(bg,
             new THREE.MeshStandardMaterial({
               color: 0xe8ff47, emissive: 0x303800,
               metalness: 0.5, roughness: 0.4,
@@ -133,7 +134,7 @@ export default function HelixSection() {
       dl1.position.set(5, 10, 5); scene.add(dl1);
       const dl2 = new THREE.DirectionalLight(0xff6b35, 2);
       dl2.position.set(-5, -5, -3); scene.add(dl2);
-      const pl  = new THREE.PointLight(0xe8ff47, 2, 30);
+      const pl = new THREE.PointLight(0xe8ff47, 2, 30);
       pl.position.set(0, 0, 10); scene.add(pl);
       const pl2 = new THREE.PointLight(0x00d4c8, 0, 25);
       pl2.position.set(0, 6, 6); scene.add(pl2);
@@ -149,25 +150,25 @@ export default function HelixSection() {
       // ── Scroll progress (raw 0→1) ─────────────────────────────────────
       let scrollProg = 0;
       const onScroll = () => {
-        const rect   = wrap.getBoundingClientRect();
+        const rect = wrap.getBoundingClientRect();
         const totalH = wrap.offsetHeight - window.innerHeight;
-        scrollProg   = Math.max(0, Math.min(1, -rect.top / totalH));
+        scrollProg = Math.max(0, Math.min(1, -rect.top / totalH));
       };
       window.addEventListener("scroll", onScroll, { passive: true });
 
       // ── Lerped state — EVERYTHING goes through lerp, no hard jumps ──────
       // Camera
-      let camZ = 28,  camZt = 28;
-      let camX = 8,   camXt = 8;
+      let camZ = 28, camZt = 28;
+      let camX = 8, camXt = 8;
       // Tubes separation (phase 2)
-      let sep  = 0,   sept  = 0;
+      let sep = 0, sept = 0;
       // Rotation speed multiplier
       let rotSpd = 0.2, rotSpdt = 0.2;
       // Bridge opacity
       let bridgeOp = 0, bridgeOpt = 0;
       // Point light intensities
-      let pl1I = 2,  pl1It = 2;
-      let pl2I = 0,  pl2It = 0;
+      let pl1I = 2, pl1It = 2;
+      let pl2I = 0, pl2It = 0;
       // Glow flash
       let glowOp = 0, glowOpt = 0;
       // Atom scatter amount (0 = assembled, 1 = scattered)
@@ -175,7 +176,7 @@ export default function HelixSection() {
 
       // Smooth lerp helper
       const lerpF = (cur: number, tgt: number, f: number) => cur + (tgt - cur) * f;
-      const LERP  = 0.055;   // global lerp factor — lower = smoother/slower
+      const LERP = 0.055;   // global lerp factor — lower = smoother/slower
 
       let t2 = 0;
       const render = () => {
@@ -193,9 +194,9 @@ export default function HelixSection() {
         // Phase 3 (p 0.75→1.0): re-merge, glow
 
         // Smooth step helpers
-        const s01 = Math.max(0, Math.min(1, (p - 0.0)  / 0.25));   // 0→1 in phase 0
+        const s01 = Math.max(0, Math.min(1, (p - 0.0) / 0.25));   // 0→1 in phase 0
         const s12 = Math.max(0, Math.min(1, (p - 0.25) / 0.25));   // 0→1 in phase 1
-        const s23 = Math.max(0, Math.min(1, (p - 0.5)  / 0.25));   // 0→1 in phase 2
+        const s23 = Math.max(0, Math.min(1, (p - 0.5) / 0.25));   // 0→1 in phase 2
         const s34 = Math.max(0, Math.min(1, (p - 0.75) / 0.25));   // 0→1 in phase 3
 
         // Ease (cubic)
@@ -206,9 +207,9 @@ export default function HelixSection() {
 
         // Camera Z: 28 → 18 → 10 → 14 → 12
         camZt = 28 - e01 * 10         // phase 0: 28→18
-               - e12 * 8              // phase 1: 18→10
-               + e23 * 4              // phase 2: 10→14
-               - e34 * 2;             // phase 3: 14→12
+          - e12 * 8              // phase 1: 18→10
+          + e23 * 4              // phase 2: 10→14
+          - e34 * 2;             // phase 3: 14→12
 
         // Camera X: 8 → 6 → 4 → 6 → 5
         camXt = 8 - e01 * 2 - e12 * 2 + e23 * 2 - e34 * 1;
@@ -221,9 +222,9 @@ export default function HelixSection() {
 
         // Bridge opacity: 0 → 1 in phase 0/1, 0 in phase 2, back to 1 in phase 3
         bridgeOpt = e01 * 0.7
-                   + e12 * 0.0        // already at 0.7
-                   - e23 * 0.7        // phase 2: fade out
-                   + e34 * 0.7;       // phase 3: fade back in
+          + e12 * 0.0        // already at 0.7
+          - e23 * 0.7        // phase 2: fade out
+          + e34 * 0.7;       // phase 3: fade back in
 
         // Tube separation X: 0 → 4 in phase 2, back to 0 in phase 3
         sept = e23 * 4 - e34 * 4;
@@ -238,14 +239,14 @@ export default function HelixSection() {
         glowOpt = Math.sin(e34 * Math.PI) * 0.08;
 
         // ── Apply lerps ──────────────────────────────────────────────────
-        camZ     = lerpF(camZ,     camZt,     LERP);
-        camX     = lerpF(camX,     camXt,     LERP);
-        sep      = lerpF(sep,      sept,      LERP);
-        rotSpd   = lerpF(rotSpd,   rotSpdt,   LERP * 0.6);
+        camZ = lerpF(camZ, camZt, LERP);
+        camX = lerpF(camX, camXt, LERP);
+        sep = lerpF(sep, sept, LERP);
+        rotSpd = lerpF(rotSpd, rotSpdt, LERP * 0.6);
         bridgeOp = lerpF(bridgeOp, bridgeOpt, LERP);
-        pl1I     = lerpF(pl1I,     pl1It,     LERP);
-        pl2I     = lerpF(pl2I,     pl2It,     LERP);
-        glowOp   = lerpF(glowOp,   glowOpt,   LERP * 1.5);
+        pl1I = lerpF(pl1I, pl1It, LERP);
+        pl2I = lerpF(pl2I, pl2It, LERP);
+        glowOp = lerpF(glowOp, glowOpt, LERP * 1.5);
         scatterT = lerpF(scatterT, scatterTt, LERP * 0.8);
 
         // ── Apply to scene ───────────────────────────────────────────────
@@ -256,7 +257,7 @@ export default function HelixSection() {
         // Atoms: lerp between scatter position and helix position
         atoms1.forEach((m, ai) => {
           const orig = s1orig[ai * 3] ?? s1orig[s1orig.length - 1];
-          const sc   = scatter1[ai];
+          const sc = scatter1[ai];
           if (!orig || !sc) return;
           m.position.x = lerpF(m.position.x, orig.x + sc.x * scatterT, 0.06);
           m.position.y = lerpF(m.position.y, orig.y + sc.y * scatterT, 0.06);
@@ -264,7 +265,7 @@ export default function HelixSection() {
         });
         atoms2.forEach((m, ai) => {
           const orig = s2orig[ai * 3] ?? s2orig[s2orig.length - 1];
-          const sc   = scatter2[ai];
+          const sc = scatter2[ai];
           if (!orig || !sc) return;
           m.position.x = lerpF(m.position.x, orig.x + sc.x * scatterT, 0.06);
           m.position.y = lerpF(m.position.y, orig.y + sc.y * scatterT, 0.06);
@@ -273,7 +274,7 @@ export default function HelixSection() {
 
         // Tubes separation — lerped, no jump
         tube1.position.x = lerpF(tube1.position.x, -sep, 0.07);
-        tube2.position.x = lerpF(tube2.position.x,  sep, 0.07);
+        tube2.position.x = lerpF(tube2.position.x, sep, 0.07);
 
         // Bridges opacity — lerped
         bridges.forEach((b) => {
@@ -286,7 +287,7 @@ export default function HelixSection() {
         group.rotation.y += rotSpd * 0.016;
 
         // Lights
-        pl.intensity  = pl1I + Math.sin(t2 * 2) * 0.4;
+        pl.intensity = pl1I + Math.sin(t2 * 2) * 0.4;
         pl2.intensity = pl2I;
         glowMat.opacity = glowOp;
 
@@ -325,7 +326,7 @@ export default function HelixSection() {
           scrollTrigger: {
             trigger: wrapRef.current,
             start: `top+=${enter * totalH}px top`,
-            end:   `top+=${peak  * totalH}px top`,
+            end: `top+=${peak * totalH}px top`,
             scrub: 1.2,
           },
         });
@@ -338,7 +339,7 @@ export default function HelixSection() {
             scrollTrigger: {
               trigger: wrapRef.current,
               start: `top+=${(leave - 0.06) * totalH}px top`,
-              end:   `top+=${leave          * totalH}px top`,
+              end: `top+=${leave * totalH}px top`,
               scrub: 1.0,
             },
           });
@@ -426,7 +427,7 @@ export default function HelixSection() {
                       key={di}
                       className="h-px rounded-full transition-all duration-300"
                       style={{
-                        width:      di === idx ? 32 : 10,
+                        width: di === idx ? 32 : 10,
                         background: di === idx ? "#e8ff47" : "rgba(240,236,227,0.18)",
                       }}
                     />

@@ -12,12 +12,12 @@ const SECTIONS = ["#hero", "#about", "#skills", "#projects", "#experience", "#co
 
 // Target screen positions (vw%, vh%) and rotation config per section
 const WAYPOINTS = [
-  { x: 75, y: 55, scale: 1.0,  rotX: 0,    rotY: 0    },   // hero
-  { x: 80, y: 45, scale: 0.7,  rotX: 0.4,  rotY: 0.6  },   // about
-  { x: 12, y: 38, scale: 0.6,  rotX: -0.3, rotY: 1.2  },   // skills
-  { x: 82, y: 60, scale: 0.75, rotX: 0.6,  rotY: -0.8 },   // projects
-  { x: 15, y: 50, scale: 0.55, rotX: 0.8,  rotY: 0.4  },   // experience
-  { x: 50, y: 40, scale: 0.9,  rotX: 0.2,  rotY: 2.0  },   // contact
+  { x: 75, y: 55, scale: 1.0, rotX: 0, rotY: 0 },   // hero
+  { x: 80, y: 45, scale: 0.7, rotX: 0.4, rotY: 0.6 },   // about
+  { x: 12, y: 38, scale: 0.6, rotX: -0.3, rotY: 1.2 },   // skills
+  { x: 82, y: 60, scale: 0.75, rotX: 0.6, rotY: -0.8 },   // projects
+  { x: 15, y: 50, scale: 0.55, rotX: 0.8, rotY: 0.4 },   // experience
+  { x: 50, y: 40, scale: 0.9, rotX: 0.2, rotY: 2.0 },   // contact
 ];
 
 export default function ScrollObject3D() {
@@ -27,19 +27,19 @@ export default function ScrollObject3D() {
     let animId: number;
 
     (async () => {
-      const THREE = (await import("three")).default ?? await import("three");
+      const THREE = (await import("three"))
       const canvas = canvasRef.current;
       if (!canvas) return;
 
       const SIZE = 180;  // canvas px
-      canvas.width  = SIZE;
+      canvas.width = SIZE;
       canvas.height = SIZE;
 
       const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
       renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
       renderer.setSize(SIZE, SIZE);
 
-      const scene  = new THREE.Scene();
+      const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
       camera.position.z = 5;
 
@@ -60,7 +60,7 @@ export default function ScrollObject3D() {
       scene.add(new THREE.Mesh(geo, wireMat));
 
       // Second larger wireframe — teal
-      const geo2    = new THREE.IcosahedronGeometry(1.8, 1);
+      const geo2 = new THREE.IcosahedronGeometry(1.8, 1);
       const wireMat2 = new THREE.MeshBasicMaterial({
         color: 0x00d4c8, wireframe: true, transparent: true, opacity: 0.2,
       });
@@ -76,12 +76,12 @@ export default function ScrollObject3D() {
       scene.add(dl);
 
       /* ── scroll-driven position + rotation state ── */
-      let currentX   = WAYPOINTS[0].x;
-      let currentY   = WAYPOINTS[0].y;
-      let currentS   = WAYPOINTS[0].scale;
-      let targetX    = WAYPOINTS[0].x;
-      let targetY    = WAYPOINTS[0].y;
-      let targetS    = WAYPOINTS[0].scale;
+      let currentX = WAYPOINTS[0].x;
+      let currentY = WAYPOINTS[0].y;
+      let currentS = WAYPOINTS[0].scale;
+      let targetX = WAYPOINTS[0].x;
+      let targetY = WAYPOINTS[0].y;
+      let targetS = WAYPOINTS[0].scale;
       let targetRotX = 0;
       let targetRotY = 0;
       let currentRotX = 0;
@@ -95,7 +95,7 @@ export default function ScrollObject3D() {
           const el = document.querySelector(sel) as HTMLElement;
           if (!el) return;
           const rect = el.getBoundingClientRect();
-          const vis  = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+          const vis = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
           if (vis > bestVis) { bestVis = vis; best = i; }
         });
         return best;
@@ -104,9 +104,9 @@ export default function ScrollObject3D() {
       const onScroll = () => {
         const i = getActiveSectionIndex();
         const wp = WAYPOINTS[i];
-        targetX    = wp.x;
-        targetY    = wp.y;
-        targetS    = wp.scale;
+        targetX = wp.x;
+        targetY = wp.y;
+        targetS = wp.scale;
         targetRotX = wp.rotX;
         targetRotY = wp.rotY;
       };
@@ -118,16 +118,16 @@ export default function ScrollObject3D() {
 
         // Smooth lerp toward target
         const lerpF = 0.04;
-        currentX    += (targetX - currentX) * lerpF;
-        currentY    += (targetY - currentY) * lerpF;
-        currentS    += (targetS - currentS) * lerpF;
+        currentX += (targetX - currentX) * lerpF;
+        currentY += (targetY - currentY) * lerpF;
+        currentS += (targetS - currentS) * lerpF;
         currentRotX += (targetRotX - currentRotX) * lerpF;
         currentRotY += (targetRotY - currentRotY) * lerpF;
 
         // Position the canvas in the fixed overlay
         const half = SIZE / 2;
         canvas.style.left = `calc(${currentX}vw - ${half}px)`;
-        canvas.style.top  = `calc(${currentY}vh - ${half}px)`;
+        canvas.style.top = `calc(${currentY}vh - ${half}px)`;
         canvas.style.transform = `scale(${currentS})`;
 
         // Rotate the mesh
